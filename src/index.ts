@@ -48,6 +48,27 @@ function drawVisualizer(
   }
 }
 
+function appendAudioElement(url: string) {
+  const li = document.createElement("li");
+  li.className = "audio-item";
+  const audio = document.createElement("audio");
+  audio.controls = true;
+  audio.src = url;
+  li.appendChild(audio);
+  const label = document.createElement("span");
+  label.className = "audio-label";
+  label.textContent = ` Audio ${++audioCount}`;
+  li.appendChild(label);
+  audioList.prepend(li);
+  audio.play();
+
+  audioElements.unshift(li);
+  if (audioElements.length > 5) {
+    const lastEl = audioElements.pop()!;
+    lastEl.remove();
+  }
+}
+
 async function startListening() {
   try {
     detection = await Detect.new({
@@ -56,27 +77,15 @@ async function startListening() {
       },
       onSpeechEnd: (arr: Float32Array) => {
         statusDiv.textContent = "Speech ended.";
-        const wavBuffer = utils.encodeWAV(arr);
-        const base64 = utils.arrayBufferToBase64(wavBuffer);
-        const url = `data:audio/wav;base64,${base64}`;
-        const li = document.createElement("li");
-        li.className = "audio-item";
-        const audio = document.createElement("audio");
-        audio.controls = true;
-        audio.src = url;
-        li.appendChild(audio);
-        const label = document.createElement("span");
-        label.className = "audio-label";
-        label.textContent = ` Audio ${++audioCount}`;
-        li.appendChild(label);
-        audioList.prepend(li);
-        audio.play();
 
-        audioElements.unshift(li);
-        if (audioElements.length > 5) {
-          const lastEl = audioElements.pop()!;
-          lastEl.remove();
-        }
+        // uses provided util function to encode WAV from the Float32Array
+        const wavBuffer = utils.encodeWAV(arr);
+        // converts array buffer to base64 string
+        const base64 = utils.arrayBufferToBase64(wavBuffer);
+        // converts to base64 data URL
+        const url = `data:audio/wav;base64,${base64}`;
+        // do whatever you want with the wav audio url
+        appendAudioElement(url);
       },
       onMisfire: () => {
         statusDiv.textContent = "Misfire!";
@@ -90,6 +99,7 @@ async function startListening() {
           ctx
         );
       },
+      fftSize: 1024,
     });
 
     detection.start();
@@ -97,8 +107,9 @@ async function startListening() {
     stopButton.disabled = false;
     statusDiv.textContent = "Listening...";
   } catch (error) {
-    console.error("Error initializing MicVAD:", error);
-    statusDiv.textContent = "Error: Could not access microphone.";
+    console.error("Error initializing Detection:", error);
+    statusDiv.textContent =
+      "Error: Could not access microphone or initialize Detection.";
   }
 }
 
