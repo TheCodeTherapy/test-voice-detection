@@ -28,6 +28,6 @@
     "webpack-dev-server": "^5.1.0"
   },
   "dependencies": {
-    "web-voice-detection": "^1.0.4"
+    "web-voice-detection": "^1.0.5"
   }
 }
