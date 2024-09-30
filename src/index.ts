@@ -3,7 +3,7 @@ import { Detect, utils } from "web-voice-detection";
 
 document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
   <div>
-    <h1>Web Voice Detection Test</h1>
+    <h1>Web Voice Detection</h1>
     <div>
       <button id="startButton">Start Listening</button>
       <button id="stopButton" disabled>Stop Listening</button>
@@ -11,6 +11,9 @@ document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
     <div id="status" class="status">Press Start to begin</div>
     <ul id="audio-list"></ul>
     <canvas id="audio-visualizer"></canvas>
+    <p>
+      <a href="https://github.com/TheCodeTherapy/web-voice-detection" target="_blank">web-voice-detection GitHub</a>
+    </p>
   </div>
 `;
 
