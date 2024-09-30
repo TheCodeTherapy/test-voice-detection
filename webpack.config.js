@@ -38,11 +38,18 @@ module.exports = (env, argv) => {
           { from: "node_modules/web-voice-detection/dist/worklet.js", to: "[name][ext]" },
           { from: "node_modules/web-voice-detection/dist/*.onnx", to: "[name][ext]", },
           { from: "node_modules/web-voice-detection/dist/*.wasm", to: "[name][ext]" },
+          { from: "./src/favicon.ico", to: "[name][ext]" },
         ],
       }),
     ],
     devServer: {
       static: "./dist"
-    }
+    },
+    ignoreWarnings: [
+      {
+        module: /node_modules\/web-voice-detection\/dist/,
+        message: /Critical dependency: require function is used in a way in which dependencies cannot be statically extracted/,
+      },
+    ],
   }
 };
